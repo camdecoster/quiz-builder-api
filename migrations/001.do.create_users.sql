@@ -1,0 +1,6 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(320) NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    date_modified TIMESTAMPTZ NOT NULL DEFAULT now()
+);
