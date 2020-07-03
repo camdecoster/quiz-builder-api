@@ -10,6 +10,8 @@ const jsonBodyParser = express.json();
 
 // Define props that are required
 const requiredProps = [
+    // "id",  // Not required
+    // "user_id",  // Not required
     "title",
     "author",
     "description",
@@ -21,6 +23,7 @@ const requiredProps = [
     "final_message_medium",
     "final_message_high",
     "final_message_perfect",
+    // "date_modified", // Not required
 ];
 
 // Handle GET, POST on / endpoint
@@ -32,8 +35,10 @@ quizzesRouter
         // Get user info from auth check
         const { user } = req;
 
+        // Get quizzes, pass to response
         QuizzesService.getAllQuizzes(req.app.get("db"), user)
             .then((quizzes) => {
+                // console.log("router", quizzes);
                 res.json(QuizzesService.sanitizeQuizzes(quizzes));
             })
             .catch(next);
@@ -81,7 +86,7 @@ quizzesRouter
                 });
         }
 
-        // Add user_id, date to category object
+        // Add user_id, date to quiz object
         newQuiz.user_id = user.id;
         newQuiz.date_modified = new Date().toISOString();
 
@@ -154,7 +159,7 @@ quizzesRouter
 
         // CONSIDER CHECKING FOR LEADING SPACES ON INPUTS
 
-        // Perform category update
+        // Perform quiz update
         QuizzesService.updateQuiz(
             req.app.get("db"),
             req.params.quiz_id,
@@ -184,7 +189,7 @@ quizzesRouter
 
         //         // CONSIDER CHECKING FOR LEADING SPACES ON INPUTS
 
-        //         // Perform category update
+        //         // Perform quiz update
         //         QuizzesService.updateQuiz(
         //             req.app.get("db"),
         //             req.params.quiz_id,

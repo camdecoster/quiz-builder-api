@@ -8,9 +8,10 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 
 // Components
-const usersRouter = require("./routers/users-router");
-const quizzesRouter = require("./routers/quizzes-router");
 const authRouter = require("./auth/auth-router");
+const questionsRouter = require("./routers/questions-router");
+const quizzesRouter = require("./routers/quizzes-router");
+const usersRouter = require("./routers/users-router");
 
 // Configuration
 const { CLIENT_ORIGIN, NODE_ENV } = require("./config");
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/questions", questionsRouter);
 app.use("/api/quizzes", quizzesRouter);
 app.use("/api/users", usersRouter);
 

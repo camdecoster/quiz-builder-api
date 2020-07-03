@@ -1,6 +1,3 @@
-// I NEED TO ADD TESTING FOR GETTING QUESTIONS TO RETURN WITH QUIZ
-// ALSO ADD TESTING FOR IF QUESTIONS GET DELETED ALONG WITH QUIZ
-
 // Modules
 const app = require("../src/app");
 const knex = require("knex");
@@ -12,48 +9,42 @@ const { firstLetterUppercase } = require("../src/utilities/js-utilities");
 
 // Set up test specific information
 const { testUsers, testQuizzes, testQuestions } = helpers.makeFixtures();
-const testItems = testQuizzes;
+const testItems = testQuestions;
 
-const itemsForTest = "quizzes";
-const itemForTest = "quiz";
+const itemsForTest = "questions";
+const itemForTest = "question";
 
-const maliciousItemLabel = "testQuiz";
-const maliciousItemNames = ["maliciousQuiz", "expectedQuiz"];
-const maliciousItemTestProps = ["title", "author", "image_title"];
+const maliciousItemLabel = "testQuestion";
+const maliciousItemNames = ["maliciousQuestion", "expectedQuestion"];
+const maliciousItemTestProps = ["question", "answers", "image_title"];
 
 // Define props that are required
 const requiredProps = [
-    // "id",  // Not required
-    // "user_id",  // Not required
-    "title",
-    "author",
-    "description",
+    // "id", // Not required
+    // "user_id", // Not required
+    "quiz_id",
+    "question",
+    "answer_index",
+    "answers",
     // "color_background", // Not required
     // "color_text", // Not required
     // "image_url", // Not required
     // "image_title", // Not required
-    "final_message_low",
-    "final_message_medium",
-    "final_message_high",
-    "final_message_perfect",
     // "date_modified", // Not required
 ];
 
 const itemForPostAttempt = {
-    title: "test title",
-    author: "test author",
-    description: "test description",
+    quiz_id: 1,
+    question: "test question",
+    answer_index: 0,
+    answers: ["test1", "test2", "test3", "test4"],
     color_background: "test color_background",
     color_text: "test color_text",
     image_url: "test image_url",
     image_title: "test image_title",
-    final_message_low: "test final_message_low",
-    final_message_medium: "test final_message_medium",
-    final_message_high: "test final_message_high",
-    final_message_perfect: "test final_message_perfect",
 };
 
-describe.only(`${itemsForTest} Endpoints`, function () {
+describe(`${itemsForTest} Endpoints`, function () {
     let db;
 
     // Connect to DB
@@ -82,28 +73,25 @@ describe.only(`${itemsForTest} Endpoints`, function () {
             });
         });
 
-        context.only(`Given there are ${itemsForTest} in the database`, () => {
-            beforeEach(`insert ${itemsForTest}`, () => {
+        context(`Given there are ${itemsForTest} in the database`, () => {
+            beforeEach(`insert ${itemsForTest}`, () =>
                 // Seed database tables; disconnect from original variables
-                // console.log("seed", testQuestions);
                 helpers.seedTables[itemsForTest](
                     db,
                     JSON.parse(JSON.stringify(testUsers)),
                     JSON.parse(JSON.stringify(testQuizzes)),
                     JSON.parse(JSON.stringify(testQuestions))
-                );
-            });
+                )
+            );
 
             it(`responds with 200 and all of the ${itemsForTest}`, () => {
                 const filteredItems = testItems.filter(
                     (item) => item.user_id === testUsers[0].id
                 );
-                // console.log("testQuizzes", testQuizzes);
                 // Omit user_id from expected items
                 const expectedItems = filteredItems.map((item) =>
                     helpers.makeExpected[itemForTest](item)
                 );
-
                 return supertest(app)
                     .get(`/api/${itemsForTest}`)
                     .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
@@ -136,6 +124,7 @@ describe.only(`${itemsForTest} Endpoints`, function () {
             testInfo[maliciousItemLabel] = maliciousItem;
 
             beforeEach(`insert malicious ${itemForTest}`, () => {
+                console.log(itemForTest);
                 return helpers.seedMalicious[itemForTest](
                     db,
                     testInfo.testUser,
@@ -160,15 +149,15 @@ describe.only(`${itemsForTest} Endpoints`, function () {
 
     describe(`GET /api/${itemsForTest}/:${itemForTest}_id`, () => {
         context(`Given no ${itemsForTest}`, () => {
-            beforeEach(`insert ${itemsForTest}`, () => {
+            beforeEach(`insert ${itemsForTest}`, () =>
                 // Seed database tables; disconnect from original variables
                 helpers.seedTables[itemsForTest](
                     db,
                     JSON.parse(JSON.stringify(testUsers)),
                     JSON.parse(JSON.stringify(testQuizzes)),
                     JSON.parse(JSON.stringify(testQuestions))
-                );
-            });
+                )
+            );
 
             it(`responds with 404`, () => {
                 const itemId = 123456;

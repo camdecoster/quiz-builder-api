@@ -1,4 +1,5 @@
 // Modules
+const QuestionsService = require("./questions-service");
 const QuizBuilderService = require("./quiz-builder-service");
 
 // Define columns to return for GET requests
@@ -33,9 +34,6 @@ const sanitizeProps = [
     "final_message_perfect",
 ];
 
-// Define props that are required
-const requiredProps = columns;
-
 const QuizzesService = {
     // Delete quiz from database
     deleteQuiz(db, id) {
@@ -44,13 +42,64 @@ const QuizzesService = {
     },
 
     // Get all quizzes owned by user
-    getAllQuizzes(db, user) {
-        return QuizBuilderService.getAllItems(db, "quizzes", user, columns);
+    async getAllQuizzes(db, user) {
+        try {
+            // Get quizzes
+            const quizzes = await QuizBuilderService.getAllItems(
+                db,
+                "quizzes",
+                user,
+                columns
+            );
+
+            // console.log("qs", quizzes);
+
+            // Get quiz questions, add them to quiz
+            const newQuizzes = [];
+            // for..of required here because it is blocking while forEach is not with
+            // async calls
+            for (const quiz of quizzes) {
+                const questions = await QuestionsService.getAllQuestionsByQuizId(
+                    db,
+                    user,
+                    quiz.id
+                );
+                newQuizzes.push({
+                    ...quiz,
+                    questions: questions,
+                });
+            }
+            return newQuizzes;
+        } catch (error) {
+            console.log(error);
+        }
     },
 
     // Get quiz with given ID
-    getById(db, user, id) {
-        return QuizBuilderService.getById(db, "quizzes", user, id, columns);
+    async getById(db, user, id) {
+        // Get quiz
+        const quiz = await QuizBuilderService.getById(
+            db,
+            "quizzes",
+            user,
+            id,
+            columns
+        );
+
+        // Get questions for quiz
+        const questions = await QuestionsService.getAllQuestionsByQuizId(
+            db,
+            user,
+            id
+        );
+
+        // Add questions to quiz, if questions exist
+        if (!!questions.length) {
+            quiz.questions = questions;
+        }
+
+        return quiz;
+        // return QuizBuilderService.getById(db, "quizzes", user, id, columns);
     },
 
     // Check if quiz name already used
