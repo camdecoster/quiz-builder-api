@@ -42,7 +42,11 @@ const QuestionsService = {
 
     // Get question with given quiz ID
     getAllQuestionsByQuizId(db, user, id) {
-        return this.getAllQuestions(db, user).where("questions.quiz_id", id);
+        return db
+            .from("questions")
+            .select(columns)
+            .where("questions.quiz_id", id);
+        // return this.getAllQuestions(db, user).where("questions.quiz_id", id);
     },
 
     // Get question with given ID

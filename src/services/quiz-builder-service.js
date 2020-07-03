@@ -19,9 +19,8 @@ const QuizBuilderService = {
     // Get item with given ID
     getById(db, table, user, id, columns) {
         // console.log("`getById` ran");
-        return this.getAllItems(db, table, user, columns)
-            .where(`${table}.id`, id)
-            .first();
+        // Don't need user ID since this is unprotected
+        return db.from(table).select(columns).where(`${table}.id`, id).first();
     },
 
     // Check if item name already used

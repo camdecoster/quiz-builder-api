@@ -108,10 +108,14 @@ quizzesRouter
 // Handle GET, DELETE, PATCH on /:quiz_id endpoint
 quizzesRouter
     .route("/:quiz_id")
-    .all(requireAuth)
+    // Check for random quiz
+    .all(checkRandomQuiz)
+    // Quiz is returned from command below
     .all(checkQuizIdExists)
     // Return quiz info
     .get((req, res, next) => res.json(QuizzesService.sanitizeQuiz(res.quiz)))
+    // Require authentication for below methods
+    .all(requireAuth)
     // Update quiz info
     .patch(jsonBodyParser, (req, res, next) => {
         // Get user info from auth check
@@ -210,6 +214,29 @@ quizzesRouter
             })
             .catch(next);
     });
+
+// Return random quiz id
+async function checkRandomQuiz(req, res, next) {
+    try {
+        // Check for random quiz request
+        if (req.params.quiz_id === "random") {
+            // Get random ID, send it back, then end
+            QuizzesService.getRandomQuizId(req.app.get("db")).then((id) => {
+                if (!id)
+                    return res.status(404).json({
+                        error: { message: `Random quiz unavailable` },
+                    });
+                res.send(id);
+            });
+        }
+        // Otherwise, keep going through pipeline
+        else {
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
 /* async/await syntax for promises */
 async function checkQuizIdExists(req, res, next) {

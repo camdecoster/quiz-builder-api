@@ -102,6 +102,14 @@ const QuizzesService = {
         // return QuizBuilderService.getById(db, "quizzes", user, id, columns);
     },
 
+    getRandomQuizId(db) {
+        return db
+            .from("quizzes")
+            .select("id")
+            .orderBy(db.raw("random()"))
+            .first();
+    },
+
     // Check if quiz name already used
     hasQuizWithTitle(db, user, title) {
         return QuizBuilderService.hasItemWithProp(
