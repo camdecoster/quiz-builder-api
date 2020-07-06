@@ -6,6 +6,7 @@ const columns = [
     "id",
     "quiz_id",
     "question",
+    "index_quiz_order",
     "answer_index",
     "answers",
     "color_background",
@@ -17,14 +18,17 @@ const columns = [
 
 // Define props to sanitize
 const sanitizeProps = [
+    // "id",
     // "quiz_id",
     "question",
+    // "index_quiz_order",
     // "answer_index",
     "answers",
     "color_background",
     "color_text",
     "image_url",
     "image_title",
+    // "date_modified",
 ];
 
 const QuestionsService = {
@@ -45,7 +49,8 @@ const QuestionsService = {
         return db
             .from("questions")
             .select(columns)
-            .where("questions.quiz_id", id);
+            .where("questions.quiz_id", id)
+            .orderBy("index_quiz_order", "asc");
         // return this.getAllQuestions(db, user).where("questions.quiz_id", id);
     },
 

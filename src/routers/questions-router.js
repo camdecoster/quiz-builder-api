@@ -14,6 +14,7 @@ const requiredProps = [
     // "user_id", // Not required
     "quiz_id",
     "question",
+    "index_quiz_order",
     "answer_index",
     "answers",
     // "color_background", // Not required
@@ -47,6 +48,7 @@ questionsRouter
         const {
             quiz_id,
             question,
+            index_quiz_order,
             answer_index,
             answers,
             color_background,
@@ -57,6 +59,7 @@ questionsRouter
         const newQuestion = QuestionsService.sanitizeQuestion({
             quiz_id,
             question,
+            index_quiz_order,
             answer_index,
             answers,
             color_background,
@@ -114,6 +117,7 @@ questionsRouter
         const {
             quiz_id,
             question,
+            index_quiz_order,
             answer_index,
             answers,
             color_background,
@@ -124,6 +128,7 @@ questionsRouter
         const questionToUpdate = QuestionsService.sanitizeQuestion({
             quiz_id,
             question,
+            index_quiz_order,
             answer_index,
             answers,
             color_background,

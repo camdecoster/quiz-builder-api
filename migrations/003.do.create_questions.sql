@@ -3,6 +3,7 @@ CREATE TABLE questions (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
     quiz_id INTEGER REFERENCES quizzes(id) ON DELETE CASCADE NOT NULL,
     question TEXT NOT NULL,
+    index_quiz_order INTEGER NOT NULL,
     answer_index INTEGER NOT NULL,
     answers TEXT [] NOT NULL,
     color_background TEXT NOT NULL DEFAULT 'black',

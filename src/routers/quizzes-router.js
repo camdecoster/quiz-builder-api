@@ -38,7 +38,6 @@ quizzesRouter
         // Get quizzes, pass to response
         QuizzesService.getAllQuizzes(req.app.get("db"), user)
             .then((quizzes) => {
-                // console.log("router", quizzes);
                 res.json(QuizzesService.sanitizeQuizzes(quizzes));
             })
             .catch(next);

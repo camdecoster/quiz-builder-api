@@ -44,20 +44,19 @@ const QuizzesService = {
     // Get all quizzes owned by user
     async getAllQuizzes(db, user) {
         try {
-            // Get quizzes
+            // Get quizzes, sort them in ascending order by ID
             const quizzes = await QuizBuilderService.getAllItems(
                 db,
                 "quizzes",
                 user,
                 columns
-            );
-
-            // console.log("qs", quizzes);
+            ).orderBy("id", "asc");
 
             // Get quiz questions, add them to quiz
             const newQuizzes = [];
-            // for..of required here because it is blocking while forEach is not with
-            // async calls
+
+            // for..of required here because it is blocking with async calls while forEach is not
+            //
             for (const quiz of quizzes) {
                 const questions = await QuestionsService.getAllQuestionsByQuizId(
                     db,
