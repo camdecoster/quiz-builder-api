@@ -1,6 +1,6 @@
 # [Quiz Builder API](https://quiz-builder-cdd.herokuapp.com)
 
-<!-- ![Quiz Builder Dashboard](src/images/dashboard_categories.png) -->
+![Quiz Builder Question](src/images/quiz_question.png)
 
 This is the repo for the backend of [Quiz Builder](https://quiz-builder-client.vercel.app). Quiz Builder is an easy to use app to build quizzes which can be shared with your friends. The frontend communicates to the backend using the API:
 

@@ -85,7 +85,6 @@ describe.only(`${itemsForTest} Endpoints`, function () {
         context.only(`Given there are ${itemsForTest} in the database`, () => {
             beforeEach(`insert ${itemsForTest}`, () => {
                 // Seed database tables; disconnect from original variables
-                // console.log("seed", testQuestions);
                 helpers.seedTables[itemsForTest](
                     db,
                     JSON.parse(JSON.stringify(testUsers)),
@@ -98,7 +97,7 @@ describe.only(`${itemsForTest} Endpoints`, function () {
                 const filteredItems = testItems.filter(
                     (item) => item.user_id === testUsers[0].id
                 );
-                // console.log("testQuizzes", testQuizzes);
+
                 // Omit user_id from expected items
                 const expectedItems = filteredItems.map((item) =>
                     helpers.makeExpected[itemForTest](item)
